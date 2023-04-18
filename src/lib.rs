@@ -72,6 +72,25 @@ pub trait ViewFields: Clone + Copy + Hash + PartialEq + Eq {
     }
 }
 
+/// Convert something into a field, with the option to silently fail.
+pub trait IntoField<VF: ViewFields> {
+    fn into_field(self) -> Option<VF>;
+}
+
+/// Implement for all fields.
+impl<VF: ViewFields> IntoField<VF> for VF {
+    fn into_field(self) -> Option<VF> {
+        Some(self)
+    }
+}
+
+/// Implement for `&str`, using [`ViewFields::from_str`].
+impl<VF: ViewFields> IntoField<VF> for &str {
+    fn into_field(self) -> Option<VF> {
+        VF::from_str(self)
+    }
+}
+
 pub struct ViewContext<'v, T>
 where
     T: View,
@@ -84,24 +103,29 @@ impl<'v, T> ViewContext<'v, T>
 where
     T: View,
 {
-    pub fn with_fields<I>(mut self, fields: I) -> Self
+    pub fn with_fields<I, IF>(mut self, fields: I) -> Self
     where
-        I: IntoIterator<Item = T::Fields>,
+        I: IntoIterator<Item = IF>,
+        IF: IntoField<T::Fields>,
     {
-        self.fields = fields.into_iter().collect();
+        self.fields = fields.into_iter().filter_map(|f| f.into_field()).collect();
         self
     }
 
-    pub fn add_fields<I>(mut self, fields: I) -> Self
+    pub fn add_fields<I, IF>(mut self, fields: I) -> Self
     where
-        I: IntoIterator<Item = T::Fields>,
+        I: IntoIterator<Item = IF>,
+        IF: IntoField<T::Fields>,
     {
-        self.fields.extend(fields);
+        self.fields
+            .extend(fields.into_iter().filter_map(|f| f.into_field()));
         self
     }
 
-    pub fn add_field(mut self, field: T::Fields) -> Self {
-        self.fields.insert(field);
+    pub fn add_field(mut self, field: impl IntoField<T::Fields>) -> Self {
+        if let Some(field) = field.into_field() {
+            self.fields.insert(field);
+        }
         self
     }
 }

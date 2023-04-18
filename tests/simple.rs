@@ -114,9 +114,11 @@ fn test_derived() {
     );
 
     assert_eq!(
-        serde_json::to_value(MyRecordDerived::default().as_view().with_fields(
-            <MyRecordDerived as View>::Fields::from_str_iter("some_string,flag".split(","))
-        ))
+        serde_json::to_value(
+            MyRecordDerived::default()
+                .as_view()
+                .with_fields("some_string,flag".split(","))
+        )
         .unwrap(),
         json!({
             "flag": true,
