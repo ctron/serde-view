@@ -124,3 +124,19 @@ fn test_derived() {
         })
     );
 }
+
+#[test]
+fn test_all() {
+    // if no fields are selected, this means: all
+    let mut value = MyRecordDerived::default();
+    value.optional_flag = Some(false);
+
+    assert_eq!(
+        serde_json::to_value(value.as_view()).unwrap(),
+        json!({
+            "flag": true,
+            "some_string": "Hello World",
+            "optional_flag": false,
+        })
+    );
+}

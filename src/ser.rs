@@ -12,6 +12,20 @@ where
     _marker: PhantomData<V>,
 }
 
+/// Check if a field is needed for serialization
+fn is_needed<V: View>(name: &str, fields: &HashSet<V::Fields>) -> bool {
+    if fields.is_empty() {
+        // if no fields are listed, we accept all
+        return true;
+    }
+
+    if let Some(field) = V::Fields::from_str(name) {
+        fields.contains(&field)
+    } else {
+        false
+    }
+}
+
 pub struct ViewSerializeStruct<'f, S, V>
 where
     S: SerializeStruct,
@@ -38,13 +52,11 @@ where
     where
         T: Serialize,
     {
-        if let Some(field) = V::Fields::from_str(key) {
-            if !self.fields.contains(&field) {
-                return self.serializer.skip_field(key);
-            }
+        if is_needed::<V>(key, &self.fields) {
+            self.serializer.serialize_field(key, value)
+        } else {
+            self.serializer.skip_field(key)
         }
-
-        self.serializer.serialize_field(key, value)
     }
 
     fn skip_field(&mut self, key: &'static str) -> Result<(), Self::Error> {
