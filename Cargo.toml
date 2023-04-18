@@ -1,0 +1,21 @@
+[package]
+name = "serde_view"
+version = "0.1.0"
+edition = "2021"
+
+authors = ["Jens Reimann <jreimann@redhat.com>"]
+license = "Apache-2.0"
+description = "Serialize views of data"
+repository = "https://github.com/ctron/serde-view"
+categories = ["data-structures", "encoding", "development-tools"]
+keywords = ["serde", "view", "derive"]
+readme = "README.md"
+rust-version = "1.62"
+
+[dependencies]
+serde = "1"
+serde_view_macros = { version = "0.1", path = "serde_view_macros" }
+
+[dev-dependencies]
+serde = { version = "*", features = ["derive"] }
+serde_json = "1"
