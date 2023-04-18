@@ -34,6 +34,7 @@ pub fn view(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
 
         impl core::fmt::Display for #fields_name {
             fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+                use serde_view::ViewFields;
                 f.write_str(self.as_str())
            }
         }
