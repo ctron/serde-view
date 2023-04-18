@@ -10,7 +10,6 @@ repository = "https://github.com/ctron/serde-view"
 categories = ["data-structures", "encoding", "development-tools"]
 keywords = ["serde", "view", "derive"]
 readme = "README.md"
-rust-version = "1.62"
 
 [dependencies]
 serde = "1"
