@@ -3,6 +3,14 @@ name = "serde_view_macros"
 version = "0.1.0"
 edition = "2021"
 
+authors = ["Jens Reimann <jreimann@redhat.com>"]
+license = "Apache-2.0"
+description = "Serialize views of data"
+repository = "https://github.com/ctron/serde-view"
+categories = ["data-structures", "encoding", "development-tools"]
+keywords = ["serde", "view", "derive"]
+readme = "../README.md"
+
 [lib]
 proc-macro = true
 
