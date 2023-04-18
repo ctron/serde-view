@@ -63,8 +63,12 @@ pub trait ViewFields: Clone + Copy + Hash + PartialEq + Eq {
     fn as_str(&self) -> &'static str;
     fn from_str(name: &str) -> Option<Self>;
 
-    fn from_str_iter<'a>(names: impl IntoIterator<Item = &'a str>) -> Vec<Self> {
+    fn from_str_iter<'a>(names: impl IntoIterator<Item = &'a str>) -> HashSet<Self> {
         names.into_iter().filter_map(Self::from_str).collect()
+    }
+
+    fn from_str_split(names: &str) -> HashSet<Self> {
+        Self::from_str_iter(names.split(","))
     }
 }
 
