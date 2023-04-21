@@ -74,7 +74,12 @@ fn view_fields(name: &Ident, data: &DataStruct) -> TokenStream {
             Self::#variant => #name
         }
     });
-    let from_str_impl = fields.iter().map(|(name, variant)| {
+    let from_str_impl_1 = fields.iter().map(|(name, variant)| {
+        quote! {
+            #name => Self::#variant
+        }
+    });
+    let from_str_impl_2 = fields.iter().map(|(name, variant)| {
         quote! {
             #name => Self::#variant
         }
@@ -96,11 +101,22 @@ fn view_fields(name: &Ident, data: &DataStruct) -> TokenStream {
 
             fn from_str(name: &str) -> Option<Self> {
                 Some(match name {
-                    #(#from_str_impl, )*
+                    #(#from_str_impl_1, )*
                     _ => return None,
                 })
             }
 
+        }
+
+        impl std::str::FromStr for #name {
+            type Err = ();
+
+            fn from_str(s: &str) -> Result<Self, Self::Err> {
+                Ok(match s {
+                    #(#from_str_impl_2, )*
+                    _ => return Err(()),
+                })
+            }
         }
     }
 }
