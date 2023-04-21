@@ -1,6 +1,6 @@
 [package]
 name = "serde_view"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 
 authors = ["Jens Reimann <jreimann@redhat.com>"]
@@ -13,7 +13,7 @@ readme = "README.md"
 
 [dependencies]
 serde = "1"
-serde_view_macros = { version = "0.1.3", path = "serde_view_macros" }
+serde_view_macros = { version = "0.1.5", path = "serde_view_macros" }
 
 [dev-dependencies]
 serde = { version = "1", features = ["derive"] }
