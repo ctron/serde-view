@@ -12,9 +12,8 @@ keywords = ["serde", "view", "derive"]
 readme = "README.md"
 
 [dependencies]
-serde = "1"
+serde = { version = "1", features = ["derive"] }
 serde_view_macros = { version = "0.1.5", path = "serde_view_macros" }
 
 [dev-dependencies]
-serde = { version = "1", features = ["derive"] }
 serde_json = "1"

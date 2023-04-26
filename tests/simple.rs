@@ -52,12 +52,12 @@ impl ViewFields for MyRecordFields {
         }
     }
 
-    fn from_str(name: &str) -> Option<Self> {
-        Some(match name {
+    fn from_str(name: &str) -> serde_view::Result<Self> {
+        Ok(match name {
             "some_string" => Self::SomeString,
             "flag" => Self::Flag,
             "optional_flag" => Self::OptionalFlag,
-            _ => return None,
+            s => return Err(serde_view::Error::UnknownField(s.to_string())),
         })
     }
 }
@@ -79,6 +79,7 @@ fn test_manual() {
             MyRecord::default()
                 .as_view()
                 .with_fields([<MyRecord as View>::Fields::SomeString])
+                .unwrap()
         )
         .unwrap(),
         json!({
@@ -94,6 +95,7 @@ fn test_derived() {
             MyRecordDerived::default()
                 .as_view()
                 .with_fields([<MyRecordDerived as View>::Fields::SomeString])
+                .unwrap()
         )
         .unwrap(),
         json!({
@@ -106,6 +108,7 @@ fn test_derived() {
             MyRecordDerived::default()
                 .as_view()
                 .with_fields([MyRecordDerivedFields::SomeString])
+                .unwrap()
         )
         .unwrap(),
         json!({
@@ -118,6 +121,7 @@ fn test_derived() {
             MyRecordDerived::default()
                 .as_view()
                 .with_fields("some_string,flag".split(","))
+                .unwrap()
         )
         .unwrap(),
         json!({

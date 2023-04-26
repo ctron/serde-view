@@ -19,7 +19,7 @@ fn is_needed<V: View>(name: &str, fields: &HashSet<V::Fields>) -> bool {
         return true;
     }
 
-    if let Some(field) = V::Fields::from_str(name) {
+    if let Ok(field) = V::Fields::from_str(name) {
         fields.contains(&field)
     } else {
         false
@@ -52,7 +52,7 @@ where
     where
         T: Serialize,
     {
-        if is_needed::<V>(key, &self.fields) {
+        if is_needed::<V>(key, self.fields) {
             self.serializer.serialize_field(key, value)
         } else {
             self.serializer.skip_field(key)
@@ -231,7 +231,7 @@ where
     ) -> Result<Self::SerializeStruct, Self::Error> {
         Ok(ViewSerializeStruct {
             serializer: self.serializer.serialize_struct(name, len)?,
-            fields: &self.fields,
+            fields: self.fields,
             _marker: Default::default(),
         })
     }

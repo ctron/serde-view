@@ -99,22 +99,22 @@ fn view_fields(name: &Ident, data: &DataStruct) -> TokenStream {
                 }
             }
 
-            fn from_str(name: &str) -> Option<Self> {
-                Some(match name {
+            fn from_str(name: &str) -> serde_view::Result<Self> {
+                Ok(match name {
                     #(#from_str_impl_1, )*
-                    _ => return None,
+                    s => return Err(serde_view::Error::UnknownField(s.to_string())),
                 })
             }
 
         }
 
         impl std::str::FromStr for #name {
-            type Err = ();
+            type Err = serde_view::Error;
 
             fn from_str(s: &str) -> Result<Self, Self::Err> {
                 Ok(match s {
                     #(#from_str_impl_2, )*
-                    _ => return Err(()),
+                    s => return Err(serde_view::Error::UnknownField(s.to_string())),
                 })
             }
         }
