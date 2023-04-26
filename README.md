@@ -21,6 +21,6 @@ fn serialize(my: &MyStruct) -> Result<serde_json::Value, serde_json::Error> {
     serde_json::to_value(my.as_view().with_fields([
        <MyStruct as View>::Fields::Id,
        <MyStruct as View>::Fields::Name,
-   ]))
+   ]).unwrap())
 }
 ```
