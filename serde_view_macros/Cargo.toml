@@ -1,6 +1,6 @@
 [package]
 name = "serde_view_macros"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 
 authors = ["Jens Reimann <jreimann@redhat.com>"]
